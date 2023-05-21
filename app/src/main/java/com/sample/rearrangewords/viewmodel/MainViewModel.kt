@@ -21,11 +21,36 @@ class MainViewModel @Inject constructor() : ViewModel() {
     }
 
     fun selectedAnswerWord(model: WordModel) {
-        _uiState.update { state->
+        _uiState.update { state ->
             val mutableList = state.answerWords.orEmpty().toMutableList()
             val index = mutableList.indexOf(model)
-            mutableList[index] = model.copy(isSelected = !model.isSelected)
+            mutableList[index] = model.copy(isSelected = true)
             state.copy(answerWords = mutableList)
+        }
+    }
+
+    fun unselectedAnswerWord(model: WordModel) {
+        _uiState.update { state ->
+            val mutableList = state.answerWords.orEmpty().toMutableList()
+            val index = mutableList.indexOf(model.copy(isSelected = !model.isSelected))
+            mutableList[index] = model.copy(isSelected = false)
+            state.copy(answerWords = mutableList)
+        }
+    }
+
+    fun addRearrangeWord(model: WordModel) {
+        _uiState.update { state ->
+            val mutableList = state.rearrangeWords.orEmpty().toMutableList()
+            mutableList.add(model)
+            state.copy(rearrangeWords = mutableList)
+        }
+    }
+
+    fun removeRearrangeWord(model: WordModel) {
+        _uiState.update { state ->
+            val mutableList = state.rearrangeWords.orEmpty().toMutableList()
+            mutableList.remove(model)
+            state.copy(rearrangeWords = mutableList)
         }
     }
 

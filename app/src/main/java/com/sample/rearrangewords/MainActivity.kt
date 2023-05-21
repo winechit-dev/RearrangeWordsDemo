@@ -27,13 +27,14 @@ class MainActivity : AppCompatActivity() {
     private val answerWordsAdapter by lazy {
         AnswerWordsAdapter { model ->
             viewModel.selectedAnswerWord(model)
-            rearrangeWordsAdapter.setData(model)
+            viewModel.addRearrangeWord(model)
         }
     }
 
     private val rearrangeWordsAdapter by lazy {
-        RearrangeWordsAdapter {
-            viewModel.selectedAnswerWord(it)
+        RearrangeWordsAdapter { model ->
+            viewModel.removeRearrangeWord(model)
+            viewModel.unselectedAnswerWord(model)
         }
     }
 
@@ -52,6 +53,16 @@ class MainActivity : AppCompatActivity() {
                     .mapNotNull { it.answerWords }
                     .collectLatest { answerWords ->
                         answerWordsAdapter.setData(answerWords)
+                    }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState
+                    .mapNotNull { it.rearrangeWords }
+                    .collectLatest { rearrangeWords ->
+                        rearrangeWordsAdapter.setData(rearrangeWords)
                     }
             }
         }

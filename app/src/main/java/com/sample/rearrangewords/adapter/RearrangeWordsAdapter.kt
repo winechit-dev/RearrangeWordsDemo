@@ -13,7 +13,7 @@ class RearrangeWordsAdapter(
 ) : ListAdapter<WordModel, RearrangeWordsAdapter.VHRearrangeWords>(
     object : DiffUtil.ItemCallback<WordModel>() {
         override fun areItemsTheSame(oldItem: WordModel, newItem: WordModel): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.isSelected == newItem.isSelected
         }
 
         override fun areContentsTheSame(oldItem: WordModel, newItem: WordModel): Boolean {
@@ -21,8 +21,6 @@ class RearrangeWordsAdapter(
         }
     }
 ) {
-
-    private val rearrangeWords: MutableList<WordModel> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VHRearrangeWords {
         return VHRearrangeWords(
@@ -32,20 +30,14 @@ class RearrangeWordsAdapter(
                 false
             )
         ) {
-            removeWord(it)
-            itemSelectedListener.invoke(it.copy(isSelected = !it.isSelected))
+            itemSelectedListener.invoke(it)
         }
     }
 
-    private fun removeWord(it: WordModel) {
-        rearrangeWords.remove(it)
+    fun setData(rearrangeWords: List<WordModel>) {
         this.submitList(ArrayList(rearrangeWords))
     }
 
-    fun setData(rearrangeWord: WordModel) {
-        this.rearrangeWords.add(rearrangeWord)
-        this.submitList(ArrayList(rearrangeWords))
-    }
 
     override fun onBindViewHolder(holder: VHRearrangeWords, position: Int) {
         val item = currentList[position]
