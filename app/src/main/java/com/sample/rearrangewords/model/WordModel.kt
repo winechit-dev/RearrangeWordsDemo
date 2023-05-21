@@ -1,4 +1,4 @@
-package com.sample.rearrangewords
+package com.sample.rearrangewords.model
 
 data class WordModel(
     val id: String,

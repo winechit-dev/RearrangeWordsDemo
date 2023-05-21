@@ -5,7 +5,10 @@ import android.os.Bundle
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
+import com.sample.rearrangewords.adapter.AnswerWordsAdapter
+import com.sample.rearrangewords.adapter.RearrangeWordsAdapter
 import com.sample.rearrangewords.databinding.ActivityMainBinding
+import com.sample.rearrangewords.model.WordModel
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding

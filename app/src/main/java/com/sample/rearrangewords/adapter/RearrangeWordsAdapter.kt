@@ -1,11 +1,11 @@
-package com.sample.rearrangewords
+package com.sample.rearrangewords.adapter
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.sample.rearrangewords.model.WordModel
 import com.sample.rearrangewords.databinding.ItemWordBinding
 
 class RearrangeWordsAdapter(
@@ -37,18 +37,14 @@ class RearrangeWordsAdapter(
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private fun removeWord(it: WordModel) {
         rearrangeWords.remove(it)
-        this.submitList(rearrangeWords)
-        this.notifyDataSetChanged()
+        this.submitList(ArrayList(rearrangeWords))
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     fun setData(rearrangeWord: WordModel) {
         this.rearrangeWords.add(rearrangeWord)
-        this.submitList(rearrangeWords)
-        this.notifyDataSetChanged()
+        this.submitList(ArrayList(rearrangeWords))
     }
 
     override fun onBindViewHolder(holder: VHRearrangeWords, position: Int) {

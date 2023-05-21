@@ -1,14 +1,13 @@
-package com.sample.rearrangewords
+package com.sample.rearrangewords.adapter
 
-import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.sample.rearrangewords.R
+import com.sample.rearrangewords.model.WordModel
 import com.sample.rearrangewords.databinding.ItemWordBinding
 
 class AnswerWordsAdapter(
@@ -16,7 +15,7 @@ class AnswerWordsAdapter(
 ) : ListAdapter<WordModel, AnswerWordsAdapter.VHAnswerWords>(
     object : DiffUtil.ItemCallback<WordModel>() {
         override fun areItemsTheSame(oldItem: WordModel, newItem: WordModel): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.isSelected == newItem.isSelected
         }
 
         override fun areContentsTheSame(oldItem: WordModel, newItem: WordModel): Boolean {
@@ -40,20 +39,16 @@ class AnswerWordsAdapter(
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     fun selectedWord(it: WordModel) {
         val index = answerWorks.indexOf(it)
         answerWorks[index] = it.copy(isSelected = !it.isSelected)
-        this.submitList(answerWorks)
-        this.notifyDataSetChanged()
+        this.submitList(ArrayList(answerWorks))
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     fun setData(answerWorks: List<WordModel>) {
         this.answerWorks.clear()
         this.answerWorks.addAll(answerWorks)
-        this.submitList(answerWorks)
-        this.notifyDataSetChanged()
+        this.submitList(ArrayList(answerWorks))
     }
 
     override fun onBindViewHolder(holder: VHAnswerWords, position: Int) {
