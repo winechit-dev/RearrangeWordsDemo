@@ -15,6 +15,7 @@ import com.sample.rearrangewords.databinding.ActivityMainBinding
 import com.sample.rearrangewords.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 
@@ -50,7 +51,7 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState
-                    .mapNotNull { it.answerWords }
+                    .map { it.answerWords }
                     .collectLatest { answerWords ->
                         answerWordsAdapter.setData(answerWords)
                     }
@@ -60,7 +61,7 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState
-                    .mapNotNull { it.rearrangeWords }
+                    .map { it.rearrangeWords }
                     .collectLatest { rearrangeWords ->
                         rearrangeWordsAdapter.setData(rearrangeWords)
                     }
