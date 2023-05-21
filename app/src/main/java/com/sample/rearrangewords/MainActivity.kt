@@ -2,86 +2,39 @@ package com.sample.rearrangewords
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
 import com.sample.rearrangewords.adapter.AnswerWordsAdapter
 import com.sample.rearrangewords.adapter.RearrangeWordsAdapter
 import com.sample.rearrangewords.databinding.ActivityMainBinding
-import com.sample.rearrangewords.model.WordModel
+import com.sample.rearrangewords.viewmodel.MainViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-
-    //you must add the Google Maven repository to your project
-    private val answerWords = listOf(
-        WordModel(
-            id = "1",
-            word = "must",
-            isSelected = false
-        ),
-        WordModel(
-            id = "2",
-            word = "to",
-            isSelected = false
-        ),
-        WordModel(
-            id = "3",
-            word = "Google",
-            isSelected = false
-        ),
-        WordModel(
-            id = "4",
-            word = "you",
-            isSelected = false
-        ),
-        WordModel(
-            id = "5",
-            word = "repository",
-            isSelected = false
-        ),
-        WordModel(
-            id = "6",
-            word = "add",
-            isSelected = false
-        ),
-        WordModel(
-            id = "7",
-            word = "project",
-            isSelected = false
-        ),
-        WordModel(
-            id = "8",
-            word = "the",
-            isSelected = false
-        ),
-        WordModel(
-            id = "9",
-            word = "Maven",
-            isSelected = false
-        ),
-        WordModel(
-            id = "10",
-            word = "your",
-            isSelected = false
-        )
-    )
+    private val viewModel by viewModels<MainViewModel>()
 
 
     private val answerWordsAdapter by lazy {
         AnswerWordsAdapter { model ->
+            viewModel.selectedAnswerWord(model)
             rearrangeWordsAdapter.setData(model)
         }
     }
 
     private val rearrangeWordsAdapter by lazy {
         RearrangeWordsAdapter {
-            selectedWord(it)
+            viewModel.selectedAnswerWord(it)
         }
-    }
-
-    private fun selectedWord(it: WordModel) {
-        answerWordsAdapter.selectedWord(it)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,6 +42,19 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initUI()
+        collectData()
+    }
+
+    private fun collectData() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState
+                    .mapNotNull { it.answerWords }
+                    .collectLatest { answerWords ->
+                        answerWordsAdapter.setData(answerWords)
+                    }
+            }
+        }
     }
 
     private fun initUI() {
@@ -97,7 +63,6 @@ class MainActivity : AppCompatActivity() {
             flexboxLayoutManager.justifyContent = JustifyContent.CENTER
             rvAnswerWords.layoutManager = flexboxLayoutManager
             rvAnswerWords.adapter = answerWordsAdapter
-            answerWordsAdapter.setData(answerWords)
 
             val flexboxLayoutManager2 = FlexboxLayoutManager(this@MainActivity, FlexDirection.ROW)
             flexboxLayoutManager2.justifyContent = JustifyContent.CENTER

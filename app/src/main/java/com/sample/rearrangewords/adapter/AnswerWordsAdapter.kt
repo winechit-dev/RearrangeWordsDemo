@@ -24,30 +24,19 @@ class AnswerWordsAdapter(
     }
 ) {
 
-    private val answerWorks: MutableList<WordModel> = mutableListOf()
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VHAnswerWords {
         return VHAnswerWords(
-            ItemWordBinding.inflate(
+            binding = ItemWordBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
-            )
-        ) { model ->
-            selectedWord(model)
-            itemSelectedListener.invoke(model)
-        }
+            ),
+            itemSelectedListener = itemSelectedListener
+        )
     }
 
-    fun selectedWord(it: WordModel) {
-        val index = answerWorks.indexOf(it)
-        answerWorks[index] = it.copy(isSelected = !it.isSelected)
-        this.submitList(ArrayList(answerWorks))
-    }
 
     fun setData(answerWorks: List<WordModel>) {
-        this.answerWorks.clear()
-        this.answerWorks.addAll(answerWorks)
         this.submitList(ArrayList(answerWorks))
     }
 
