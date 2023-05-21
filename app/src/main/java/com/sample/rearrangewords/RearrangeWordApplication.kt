@@ -1,4 +1,4 @@
-package com.sample
+package com.sample.rearrangewords
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
