@@ -57,9 +57,9 @@ class AnswerWordsAdapter(
                 View.INVISIBLE
             }
             if (model.isSelected) {
-                binding.rlRoot.setBackgroundResource(R.color.gray)
+                binding.rlRoot.setBackgroundResource(R.drawable.bg_selected_word)
             } else {
-                binding.rlRoot.setBackgroundResource(R.color.black)
+                binding.rlRoot.setBackgroundResource(R.drawable.bg_unselected_word)
             }
 
             binding.rlRoot.setOnClickListener {
